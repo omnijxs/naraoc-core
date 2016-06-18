@@ -1,6 +1,5 @@
 package obedience
 
-import resources.game.GameData
 import org.junit.Before
 import org.junit.Test
 import resources.common.Tile

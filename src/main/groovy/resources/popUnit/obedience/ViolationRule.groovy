@@ -1,6 +1,6 @@
 package resources.popUnit.obedience
 
-import resources.game.GameData
+import game.GameData
 import resources.gameActor.GameActor
 
 /**

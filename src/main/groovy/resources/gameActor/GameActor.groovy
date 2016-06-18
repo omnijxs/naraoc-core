@@ -1,6 +1,6 @@
 package resources.gameActor
 
-import resources.game.GameData
+import game.GameData
 import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
 import resources.popHub.PopHub

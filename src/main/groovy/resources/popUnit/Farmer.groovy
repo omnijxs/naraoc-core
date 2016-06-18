@@ -1,8 +1,8 @@
 package resources.popUnit
 
+import game.GameData
 import resources.common.Priority
 import resources.common.Product
-import resources.game.GameData
 import traits.FeedsTile
 
 /**
