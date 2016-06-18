@@ -32,3 +32,9 @@ dependencies {
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'junit:junit:4.12'
 }
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
