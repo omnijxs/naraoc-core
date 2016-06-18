@@ -85,18 +85,22 @@ trait HasBuildings {
         /** Sort in ascending order */
         uniqueBuildings = uniqueBuildings.sort { -it.value }
 
+        List<Building> resolvedUniqueBuildings = []
+
         /** Then start to subtract building from race specific buildings */
         uniqueBuildings.each { building ->
             if(maxValue > building.value){
                 maxValue -= building.value
+                resolvedUniqueBuildings.add(building)
             }
         }
 
         // TODO overflow
 
         List<Building> resolvedCommonBuildings = buildingConfiguration.findAll { 
-            it.product == product && !it.race && it.value =< maxValue }
+            it.product == product && !it.race && it.value <= maxValue 
+        }
 
-        return buildings
+        return resolvedCommonBuildings + resolvedUniqueBuildings
     }
 }
