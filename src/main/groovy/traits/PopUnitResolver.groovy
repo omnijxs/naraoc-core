@@ -1,6 +1,6 @@
 package traits
 
-import resources.game.GameData
+import game.GameData
 import resources.common.Race
 import resources.gameActor.GameActor
 

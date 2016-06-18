@@ -1,7 +1,4 @@
-
-
-import resources.game.Algorithm
-import resources.game.GameData
+import game.Algorithm
 import org.junit.Before
 import org.junit.Test
 import resources.common.Product

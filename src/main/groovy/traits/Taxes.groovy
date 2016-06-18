@@ -1,11 +1,10 @@
 package traits
 
-import resources.game.GameData
+import game.GameData
 import resources.gameActor.GameActor
 import resources.gameActor.GameActorOutput
 import resources.popHub.PopHub
 import resources.popHub.PopHubOutput
-import resources.popUnit.PopUnit
 
 /**
  * Created by jxs on 16.12.2015.

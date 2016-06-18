@@ -1,7 +1,6 @@
 package traits
 
-import resources.game.GameData
-import resources.popUnit.ArmyUnit
+import game.GameData
 
 /**
  * Created by Juri on 22.10.2015.

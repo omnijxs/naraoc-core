@@ -1,6 +1,6 @@
 package traits
 
-import resources.game.GameData
+import game.GameData
 import resources.gameActor.GameActor
 import resources.popUnit.obedience.ViolationRule
 
