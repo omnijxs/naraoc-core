@@ -65,4 +65,38 @@ trait HasBuildings {
 
         return buildings.unique()
     }
+
+    List<Building> buildingsForProduct(Product product, Integer value){
+
+        Integer maxValue = 0
+
+        /** Resolve the common tree */
+        List<Building> commonBuildings = buildingConfiguration.findAll { it.product == product && !it.race }
+
+        /** Calculate the maximum production for this product tree */
+        List<BuildingProduction> productProduction = buildingProduction.findAll { it.product == product }
+        productProduction.each { maxValue += it.value }
+
+        /** Resolve the possible race specific buildings */
+        List<Building> uniqueBuildings = buildingConfiguration.findAll { b ->
+            b.product == product && b.race && buildingProduction.find { p -> p.race == b.race && p.value >= maxValue }
+        }
+
+        /** Sort in ascending order */
+        uniqueBuildings = uniqueBuildings.sort { -it.value }
+
+        /** Then start to subtract building from race specific buildings */
+        uniqueBuildings.each { building ->
+            if(maxValue > building.value){
+                maxValue -= building.value
+            }
+        }
+
+        // TODO overflow
+
+        List<Building> resolvedCommonBuildings = buildingConfiguration.findAll { 
+            it.product == product && !it.race && it.value =< maxValue }
+
+        return buildings
+    }
 }
