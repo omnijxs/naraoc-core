@@ -2,7 +2,6 @@ import resources.popUnit.PopUnit
 import spock.lang.Specification
 import traits.Multiplies
 
-
 /**
  * Created by jxs on 27.5.2016.
  */
