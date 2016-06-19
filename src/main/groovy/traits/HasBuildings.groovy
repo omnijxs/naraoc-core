@@ -118,7 +118,7 @@ trait HasBuildings {
         
         Integer maxValue = 0
 
-        buildingProduction.findAll { 
+        buildingProductions.findAll { 
             it.product == product 
         }.each { maxValue += it.value }
 

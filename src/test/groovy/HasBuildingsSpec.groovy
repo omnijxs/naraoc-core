@@ -38,9 +38,11 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
 
         orc = new Race()
         highMen = new Race()
+
+        buildingProductions = []
     }
 
-    def "Tests for resolveBuildingProduction-method: Add new building production. "() {
+    def "Test for resolveBuildingProduction-method: Add new building production. "() {
         setup:
         farmer.race = orc
 
@@ -54,7 +56,7 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         buildingProductions.size() == 1
     }
 
-    def "Tests for resolveBuildingProduction-method: Don't add if already exists."() {
+    def "Test for resolveBuildingProduction-method: Don't add if already exists."() {
         setup:
         farmer.race = orc
         BuildingProduction p = new BuildingProduction(race: farmer.race, product: farmer.product, value: 0)
@@ -70,7 +72,7 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         buildingProductions.size() == 1
     }
 
-    def "Tests for resolveBuildingProduction-method: Add if different."() {
+    def "Test for resolveBuildingProduction-method: Add if different."() {
         setup:
         BuildingProduction p = new BuildingProduction(race: orc, product: Product.FOOD, value: 0)
         buildingProductions.add(p)
@@ -87,7 +89,7 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         buildingProductions.size() == 2
     }
 
-    def "Tests for build-method: Add new building production. "() {
+    def "Test for build-method: Add new building production. "() {
         setup:
         farmer.race = orc
 
@@ -101,7 +103,7 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         buildingProductions.size() == 1
     }
 
-    def "Tests for build-method: Add to existing building production. "() {
+    def "Test for build-method: Add to existing building production. "() {
         setup:
         farmer.race = orc
         BuildingProduction p = new BuildingProduction(race: orc, product: Product.FOOD, value: 2)
@@ -117,4 +119,39 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         buildingProductions.size() == 1
     }
 
+    def "Test for resolveMaximumProductionForProduct-method. One race and one product."(){
+        setup:
+        buildingProductions.add(new BuildingProduction(race: orc, product: Product.FOOD, value: 2))
+        buildingProductions.add(new BuildingProduction(race: orc, product: Product.FOOD, value: 2))
+
+        when:
+        Integer value = resolveMaximumProductionForProduct(Product.FOOD)
+
+        then:
+        value == 4
+    }
+
+    def "Test for resolveMaximumProductionForProduct-method. One race and two products."(){
+        setup:
+        buildingProductions.add(new BuildingProduction(race: orc, product: Product.FOOD, value: 2))
+        buildingProductions.add(new BuildingProduction(race: orc, product: Product.WORK, value: 2))
+
+        when:
+        Integer value = resolveMaximumProductionForProduct(Product.FOOD)
+
+        then:
+        value == 2
+    }
+
+    def "Test for resolveMaximumProductionForProduct-method. Two races and one products."(){
+        setup:
+        buildingProductions.add(new BuildingProduction(race: orc, product: Product.FOOD, value: 2))
+        buildingProductions.add(new BuildingProduction(race: highMen, product: Product.FOOD, value: 2))
+
+        when:
+        Integer value = resolveMaximumProductionForProduct(Product.FOOD)
+
+        then:
+        value == 4
+    }
 }
