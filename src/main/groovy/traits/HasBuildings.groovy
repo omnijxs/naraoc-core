@@ -46,31 +46,11 @@ trait HasBuildings {
 
     }
 
-    List<Building> buildingsForPath(Race race, Product product, Integer value){
-
-        List<Building> buildings = buildingConfiguration.findAll { it.race == race && it.product == product && it.value <= value }
-
-        return buildings
-    }
-
-    List<Building> buildingsForPaths(){
-
-        List<Building> buildings = []
-
-        buildingProductions.each { it ->
-            buildings.addAll(buildingsForPath(it.race, it.product, it.value))
-        }
-
-        // TODO combine production values for same buildings within different trees!!!
-
-        return buildings.unique()
-    }
-
     List<Building> buildingsForProduct(Product product, Integer value){
         
-        List<Building> resolvedUniqueBuildings = []
         List<Building> resolvedCommonBuildings = []
-
+        List<Building> resolvedUniqueBuildings = []
+        
         /** Resolve the common tree */
         List<Building> commonBuildings = buildingConfiguration.findAll { it.product == product && !it.race }
 
@@ -78,7 +58,7 @@ trait HasBuildings {
         Integer maxValue = resolveMaximumProductionForProduct(product)
         
         /** Resolve the possible race specific buildings and sort them in ascending order */
-        List<Building> uniqueBuildings = resolveUniqueBuildingsForTree(product, maxValue)
+        List<Building> uniqueBuildings = resolveUniqueBuildingsForProduct(product, maxValue)
        
         /** Then start to subtract building from race specific buildings */
         uniqueBuildings.each { building ->
@@ -86,7 +66,7 @@ trait HasBuildings {
             /** How much production for this specific product + race path */
             Integer buildValue = buildingProduction.find { it.race == building.race && it.product == building.product }.value
 
-            /** If enough build value, the building is finished*/
+            /** If enough build value, the building is finished */
             if(building.resolveBuilt(maxValue, buildValue)){
                 resolvedUniqueBuildings.add(building)
                 maxValue -= building.value
@@ -94,20 +74,20 @@ trait HasBuildings {
             } else {
                 maxValue -= buildValue
             }
+
+            // TODO Deal with production overflow (i.e. buildings under construction)
         }
 
-        /** After unique buildings we now the exact production for the common tree */
+        /** After unique buildings we know the exact production for the common tree */
         resolvedCommonBuildings = buildingConfiguration.findAll { 
             it.product == product && !it.race && it.value <= maxValue 
         }
 
         return resolvedCommonBuildings + resolvedUniqueBuildings
-
-        // TODO Deal with production overflow (i.e. buildings under construction )
     }
 
     /** Resolve the possible race specific buildings and sort them in ascending order */
-    public List<Building> resolveUniqueBuildingsForTree(Product product, Integer maxValue){
+    public List<Building> resolveUniqueBuildingsForProduct(Product product, Integer maxValue){
         return buildingConfiguration.findAll { b ->
             b.product == product && b.race && buildingProduction.find { p -> p.race == b.race && p.value >= maxValue }
         }.sort { -it.value } 

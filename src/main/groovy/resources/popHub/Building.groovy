@@ -14,19 +14,18 @@ class Building {
     Integer build
     // List<Perk> buildingPerks
 
-    // TDDO deal with upkeeå
+    // TDDO deal with upkeep
     public Integer getValue(){
         return build
     }
 
-    // TODO calculate the total build cost of my path's previous buildings.
-    public Integer getLowerLimit(){
+    // TODO resolve the build cost of all buildings preceding me in my path.
+    public Integer getTotalValue(){
     	return build
     }
 
-	// TODO calculate the total build cost of my path's previous buildings + my build cost.
-    public Integer getHigherLimit(){
-    	return build
+    public Boolean resolveBuilt(Integer maxValue, Integer buildValue){
+    	return maxValue >= getTotalValue() && buildValue >= getValue()
     }
 
 }
