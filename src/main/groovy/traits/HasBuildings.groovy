@@ -67,40 +67,61 @@ trait HasBuildings {
     }
 
     List<Building> buildingsForProduct(Product product, Integer value){
-
-        Integer maxValue = 0
+        
+        List<Building> resolvedUniqueBuildings = []
+        List<Building> resolvedCommonBuildings = []
 
         /** Resolve the common tree */
         List<Building> commonBuildings = buildingConfiguration.findAll { it.product == product && !it.race }
 
         /** Calculate the maximum production for this product tree */
-        List<BuildingProduction> productProduction = buildingProduction.findAll { it.product == product }
-        productProduction.each { maxValue += it.value }
-
-        /** Resolve the possible race specific buildings */
-        List<Building> uniqueBuildings = buildingConfiguration.findAll { b ->
-            b.product == product && b.race && buildingProduction.find { p -> p.race == b.race && p.value >= maxValue }
-        }
-
-        /** Sort in ascending order */
-        uniqueBuildings = uniqueBuildings.sort { -it.value }
-
-        List<Building> resolvedUniqueBuildings = []
-
+        Integer maxValue = resolveMaximumProductionForProduct(product)
+        
+        /** Resolve the possible race specific buildings and sort them in ascending order */
+        List<Building> uniqueBuildings = resolveUniqueBuildingsForTree(product, maxValue)
+       
         /** Then start to subtract building from race specific buildings */
         uniqueBuildings.each { building ->
-            if(maxValue > building.value){
-                maxValue -= building.value
+
+            /** How much production for this specific product + race path */
+            Integer buildValue = buildingProduction.find { it.race == building.race && it.product == building.product }.value
+
+            /** If enough build value, the building is finished*/
+            if(building.resolveBuilt(maxValue, buildValue)){
                 resolvedUniqueBuildings.add(building)
+                maxValue -= building.value
+            /** If not, then just subtract the buildValue from common building tree */
+            } else {
+                maxValue -= buildValue
             }
         }
 
-        // TODO overflow
-
-        List<Building> resolvedCommonBuildings = buildingConfiguration.findAll { 
+        /** After unique buildings we now the exact production for the common tree */
+        resolvedCommonBuildings = buildingConfiguration.findAll { 
             it.product == product && !it.race && it.value <= maxValue 
         }
 
         return resolvedCommonBuildings + resolvedUniqueBuildings
+
+        // TODO Deal with production overflow (i.e. buildings under construction )
+    }
+
+    /** Resolve the possible race specific buildings and sort them in ascending order */
+    public List<Building> resolveUniqueBuildingsForTree(Product product, Integer maxValue){
+        return buildingConfiguration.findAll { b ->
+            b.product == product && b.race && buildingProduction.find { p -> p.race == b.race && p.value >= maxValue }
+        }.sort { -it.value } 
+    }
+
+    /** Calculate the maximum production for this product tree */
+    public Integer resolveMaximumProductionForProduct(Product product){
+        
+        Integer maxValue = 0
+
+        buildingProduction.findAll { 
+            it.product == product 
+        }.each { maxValue += it.value }
+
+        return maxValue
     }
 }
