@@ -12,6 +12,8 @@ class Building {
     Product product /** Army, Magic, Food, Work, Trade */
     Integer upkeep
     Integer build
+    Building ancestor
+
     // List<Perk> buildingPerks
 
     // TDDO deal with upkeep
@@ -21,7 +23,7 @@ class Building {
 
     // TODO resolve the build cost of all buildings preceding me in my path.
     public Integer getTotalValue(){
-    	return build
+    	return ancestor ? build + ancestor.getTotalValue() : build
     }
 
     public Boolean resolveBuilt(Integer maxValue, Integer buildValue){

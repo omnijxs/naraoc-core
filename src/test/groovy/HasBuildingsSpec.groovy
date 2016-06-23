@@ -1,6 +1,7 @@
 import resources.common.Product
 import resources.common.Race
 import resources.popHub.BuildingProduction
+import resources.popHub.Building
 import resources.popUnit.Farmer
 import resources.popUnit.Merchant
 import resources.popUnit.PopUnit
@@ -153,5 +154,19 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
 
         then:
         value == 4
+    }
+
+    def "Test for getTotalValue-method. Two buildings."(){
+        setup:
+        Building a = new Building(build: 10)
+        Building b = new Building(ancestor: a, build: 30)
+
+        when:
+        Integer valueB = b.getTotalValue()
+        Integer valueA = a.getTotalValue()
+
+        then:
+        valueB == 10
+        valueA == 40
     }
 }

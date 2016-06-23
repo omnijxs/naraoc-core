@@ -53,7 +53,7 @@ class PopHub implements Demands,
     }
 
     List<Building> resolveBuildings(){
-        return buildingsForPaths()
+        // return buildingsForPaths()
     }
 
 
