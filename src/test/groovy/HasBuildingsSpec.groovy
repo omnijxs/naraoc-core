@@ -6,6 +6,7 @@ import resources.popUnit.Farmer
 import resources.popUnit.Merchant
 import resources.popUnit.PopUnit
 import resources.popUnit.Worker
+import spock.lang.IgnoreRest
 import spock.lang.Shared
 import spock.lang.Specification
 import traits.HasBuildings
@@ -156,17 +157,21 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         value == 4
     }
 
-    def "Test for getTotalValue-method. Two buildings."(){
+    def "Test for getTotalValue-method."(){
         setup:
         Building a = new Building(build: 10)
         Building b = new Building(ancestor: a, build: 30)
+        Building c = new Building(ancestor: b, build: 20)
 
         when:
-        Integer valueB = b.getTotalValue()
         Integer valueA = a.getTotalValue()
+        Integer valueB = b.getTotalValue()
+        Integer valueC = c.getTotalValue()
 
         then:
-        valueB == 10
-        valueA == 40
+        valueA == 10
+        valueB == 10 + 30
+        valueC == 10 + 30 +20
+
     }
 }

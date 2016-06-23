@@ -64,7 +64,7 @@ trait HasBuildings {
         uniqueBuildings.each { building ->
 
             /** How much production for this specific product + race path */
-            Integer buildValue = buildingProduction.find { it.race == building.race && it.product == building.product }.value
+            Integer buildValue = buildingProductions.find { it.race == building.race && it.product == building.product }.value
 
             /** If enough build value, the building is finished */
             if(building.resolveBuilt(maxValue, buildValue)){
@@ -89,7 +89,7 @@ trait HasBuildings {
     /** Resolve the possible race specific buildings and sort them in ascending order */
     public List<Building> resolveUniqueBuildingsForProduct(Product product, Integer maxValue){
         return buildingConfiguration.findAll { b ->
-            b.product == product && b.race && buildingProduction.find { p -> p.race == b.race && p.value >= maxValue }
+            b.product == product && b.race && buildingProductions.find { p -> p.race == b.race && p.value >= maxValue }
         }.sort { -it.value } 
     }
 

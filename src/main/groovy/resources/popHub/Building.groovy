@@ -21,7 +21,6 @@ class Building {
         return build
     }
 
-    // TODO resolve the build cost of all buildings preceding me in my path.
     public Integer getTotalValue(){
     	return ancestor ? build + ancestor.getTotalValue() : build
     }
