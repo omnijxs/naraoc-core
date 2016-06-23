@@ -12,6 +12,11 @@ import resources.popUnit.PopUnit
  */
 trait HasBuildings {
 
+    // TODO deal with building upkeep
+    // TODO deal with building architecture. BuildingOutput per turn which stores the buildings and overflow for every path.
+    // TODO overflow stored in the building under construction?
+    // TODO PopHub & Algorithm interface
+
     List<BuildingProduction> buildingProductions = []
     List<Building> buildingConfiguration = [] /** Comes from an external config */
 
@@ -43,16 +48,12 @@ trait HasBuildings {
         }
 
         return buildingProduction
-
     }
 
     List<Building> buildingsForProduct(Product product, Integer value){
         
         List<Building> resolvedCommonBuildings = []
         List<Building> resolvedUniqueBuildings = []
-        
-        /** Resolve the common tree */
-        List<Building> commonBuildings = buildingConfiguration.findAll { it.product == product && !it.race }
 
         /** Calculate the maximum production for this product tree */
         Integer maxValue = resolveMaximumProductionForProduct(product)
@@ -74,12 +75,10 @@ trait HasBuildings {
             } else {
                 maxValue -= buildValue
             }
-
-            // TODO Deal with production overflow (i.e. buildings under construction)
         }
 
         /** After unique buildings we know the exact production for the common tree */
-        resolvedCommonBuildings = buildingConfiguration.findAll { 
+        resolvedCommonBuildings = buildingConfiguration.findAll {
             it.product == product && !it.race && it.value <= maxValue 
         }
 
@@ -98,9 +97,7 @@ trait HasBuildings {
         
         Integer maxValue = 0
 
-        buildingProductions.findAll { 
-            it.product == product 
-        }.each { maxValue += it.value }
+        buildingProductions.findAll {  it.product == product }.each { maxValue += it.value }
 
         return maxValue
     }

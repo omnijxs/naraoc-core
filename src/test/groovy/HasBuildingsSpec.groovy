@@ -171,7 +171,7 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         then:
         valueA == 10
         valueB == 10 + 30
-        valueC == 10 + 30 +20
+        valueC == 10 + 30 + 20
 
     }
 }
