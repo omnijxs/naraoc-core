@@ -59,8 +59,39 @@ trait HasBuildings {
         Integer maxValue = resolveMaximumProductionForProduct(product)
         
         /** Resolve the possible race specific buildings and sort them in ascending order */
-        List<Building> uniqueBuildings = resolveUniqueBuildingsForProduct(product, maxValue)
+        List<Building> uniqueBuildings = resolvePossibleUniqueBuildings(product, maxValue)
        
+        /** Resolve what buildings are fully built for the product and subtract max value accordingly */
+        (resolvedUniqueBuildings, maxValue) = resolveBuiltUniqueBuildings(product, maxValue, uniqueBuildings)
+
+        /** After resolving unique buildings we know the exact production for the common tree */
+        resolvedCommonBuildings = resolveBuiltCommonBuildings(product, maxValue)
+
+        return resolvedCommonBuildings + resolvedUniqueBuildings
+    }
+
+    /** Calculate the maximum production for this product tree */
+    public Integer resolveMaximumProductionForProduct(Product product){
+        
+        Integer maxValue = 0
+
+        buildingProductions.findAll {  it.product == product }.each { maxValue += it.value }
+
+        return maxValue
+    }
+
+    /** Resolve the possible race specific buildings and sort them in ascending order */
+    public List<Building> resolvePossibleUniqueBuildings(Product product, Integer maxValue){
+        return buildingConfiguration.findAll { b ->
+            b.product == product && b.race && buildingProductions.find { p -> p.race == b.race && p.value >= maxValue }
+        }.sort { -it.value } 
+    }
+
+    /** Resolve the actual race specific buildings */
+    public List<Building> resolveBuiltUniqueBuildings(Product product, Integer maxValue, List<Building> uniqueBuildings){
+
+        List<Building> resolvedUniqueBuildings = []
+
         /** Then start to subtract building from race specific buildings */
         uniqueBuildings.each { building ->
 
@@ -77,28 +108,13 @@ trait HasBuildings {
             }
         }
 
-        /** After unique buildings we know the exact production for the common tree */
-        resolvedCommonBuildings = buildingConfiguration.findAll {
+        return new Tuple(maxValue, resolvedUniqueBuildings)
+    }
+
+    /** Resolve the actual common buildings */
+    public List<Building> resolveBuiltCommonBuildings(Product product, Integer maxValue){
+        return buildingConfiguration.findAll {
             it.product == product && !it.race && it.value <= maxValue 
         }
-
-        return resolvedCommonBuildings + resolvedUniqueBuildings
-    }
-
-    /** Resolve the possible race specific buildings and sort them in ascending order */
-    public List<Building> resolveUniqueBuildingsForProduct(Product product, Integer maxValue){
-        return buildingConfiguration.findAll { b ->
-            b.product == product && b.race && buildingProductions.find { p -> p.race == b.race && p.value >= maxValue }
-        }.sort { -it.value } 
-    }
-
-    /** Calculate the maximum production for this product tree */
-    public Integer resolveMaximumProductionForProduct(Product product){
-        
-        Integer maxValue = 0
-
-        buildingProductions.findAll {  it.product == product }.each { maxValue += it.value }
-
-        return maxValue
     }
 }
