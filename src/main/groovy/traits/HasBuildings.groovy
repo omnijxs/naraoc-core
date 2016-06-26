@@ -56,13 +56,13 @@ trait HasBuildings {
         List<Building> resolvedUniqueBuildings = []
 
         /** Calculate the maximum production for this product tree */
-        Integer maxValue = resolveMaximumProductionForProduct(product)
+        Integer maxValue = resolveProductionForProduct(product)
         
         /** Resolve the possible race specific buildings and sort them in ascending order */
         List<Building> uniqueBuildings = resolvePossibleUniqueBuildings(product, maxValue)
        
         /** Resolve what buildings are fully built for the product and subtract max value accordingly */
-        (resolvedUniqueBuildings, maxValue) = resolveBuiltUniqueBuildings(product, maxValue, uniqueBuildings)
+        (maxValue, resolvedUniqueBuildings) = resolveBuiltUniqueBuildings(product, maxValue, uniqueBuildings)
 
         /** After resolving unique buildings we know the exact production for the common tree */
         resolvedCommonBuildings = resolveBuiltCommonBuildings(product, maxValue)
@@ -71,7 +71,7 @@ trait HasBuildings {
     }
 
     /** Calculate the maximum production for this product tree */
-    public Integer resolveMaximumProductionForProduct(Product product){
+    public Integer resolveProductionForProduct(Product product){
         
         Integer maxValue = 0
 
@@ -88,11 +88,11 @@ trait HasBuildings {
     }
 
     /** Resolve the actual race specific buildings */
-    public List<Building> resolveBuiltUniqueBuildings(Product product, Integer maxValue, List<Building> uniqueBuildings){
+    public Tuple resolveBuiltUniqueBuildings(Product product, Integer maxValue, List<Building> uniqueBuildings){
 
         List<Building> resolvedUniqueBuildings = []
 
-        /** Then start to subtract building from race specific buildings */
+        /** Then start to subtract buildings from race specific buildings */
         uniqueBuildings.each { building ->
 
             /** How much production for this specific product + race path */

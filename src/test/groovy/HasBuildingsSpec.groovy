@@ -121,37 +121,37 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         buildingProductions.size() == 1
     }
 
-    def "Test for resolveMaximumProductionForProduct-method. One race and one product."(){
+    def "Test for resolveProductionForProduct-method. One race and one product."(){
         setup:
         buildingProductions.add(new BuildingProduction(race: orc, product: Product.FOOD, value: 2))
         buildingProductions.add(new BuildingProduction(race: orc, product: Product.FOOD, value: 2))
 
         when:
-        Integer value = resolveMaximumProductionForProduct(Product.FOOD)
+        Integer value = resolveProductionForProduct(Product.FOOD)
 
         then:
         value == 4
     }
 
-    def "Test for resolveMaximumProductionForProduct-method. One race and two products."(){
+    def "Test for resolveProductionForProduct-method. One race and two products."(){
         setup:
         buildingProductions.add(new BuildingProduction(race: orc, product: Product.FOOD, value: 2))
         buildingProductions.add(new BuildingProduction(race: orc, product: Product.WORK, value: 2))
 
         when:
-        Integer value = resolveMaximumProductionForProduct(Product.FOOD)
+        Integer value = resolveProductionForProduct(Product.FOOD)
 
         then:
         value == 2
     }
 
-    def "Test for resolveMaximumProductionForProduct-method. Two races and one products."(){
+    def "Test for resolveProductionForProduct-method. Two races and one products."(){
         setup:
         buildingProductions.add(new BuildingProduction(race: orc, product: Product.FOOD, value: 2))
         buildingProductions.add(new BuildingProduction(race: highMen, product: Product.FOOD, value: 2))
 
         when:
-        Integer value = resolveMaximumProductionForProduct(Product.FOOD)
+        Integer value = resolveProductionForProduct(Product.FOOD)
 
         then:
         value == 4
@@ -174,4 +174,6 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         valueC == 10 + 30 + 20
 
     }
+
+    // NEXT tests for resolvePossibleUniqueBuildings. can be data driven.
 }
