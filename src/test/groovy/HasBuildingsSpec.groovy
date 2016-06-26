@@ -7,6 +7,7 @@ import resources.popUnit.Merchant
 import resources.popUnit.PopUnit
 import resources.popUnit.Worker
 import spock.lang.IgnoreRest
+import spock.lang.Unroll
 import spock.lang.Shared
 import spock.lang.Specification
 import traits.HasBuildings
@@ -32,6 +33,15 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
     @Shared
     Race highMen
 
+    @Shared
+    Building a
+
+    @Shared
+    Building b
+
+    @Shared
+    Building c
+
     def setup(){
 
         farmer = new Farmer()
@@ -42,6 +52,12 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         highMen = new Race()
 
         buildingProductions = []
+
+        a = new Building(race: orc, product: Product.TRADE, build: 10)
+        b = new Building(race: orc, product: Product.TRADE, ancestor: a, build: 30)
+        c = new Building(race: orc, product: Product.TRADE, ancestor: b, build: 20)
+
+        buildingConfiguration = [a, b, c]
     }
 
     def "Test for resolveBuildingProduction-method: Add new building production. "() {
@@ -175,5 +191,21 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
 
     }
 
-    // NEXT tests for resolvePossibleUniqueBuildings. can be data driven.
+    @Unroll
+    def "Test for resolvePossibleUniqueBuildings-method."(){
+        setup:       
+
+        when:
+        def buildings = resolvePossibleUniqueBuildings(Product.FOOD, 0)
+
+        then:
+        buildings == expected
+
+        where:
+        product        | maxValue | expected
+        Product.FOOD   | 0        | []
+        Product.FOOD   | 60       | []
+        Product.TRADE  | 60       | [a, b, c]
+
+    }
 }
