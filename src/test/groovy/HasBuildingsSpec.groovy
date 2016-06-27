@@ -193,10 +193,12 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
 
     @Unroll
     def "Test for resolvePossibleUniqueBuildings-method."(){
-        setup:       
+        setup:
+        // TODO CANNOT DO DDT!!! 
+        buildingProductions.add(new BuildingProduction(race: orc, product: Product.TRADE, value: 60))       
 
         when:
-        def buildings = resolvePossibleUniqueBuildings(Product.FOOD, 0)
+        def buildings = resolvePossibleUniqueBuildings(product, maxValue)
 
         then:
         buildings == expected
@@ -205,7 +207,7 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         product        | maxValue | expected
         Product.FOOD   | 0        | []
         Product.FOOD   | 60       | []
-        Product.TRADE  | 60       | [a, b, c]
+        Product.TRADE  | 60       | [c, b, a]
 
     }
 }

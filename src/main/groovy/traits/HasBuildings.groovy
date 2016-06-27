@@ -83,8 +83,8 @@ trait HasBuildings {
     /** Resolve the possible race specific buildings and sort them in ascending order */
     public List<Building> resolvePossibleUniqueBuildings(Product product, Integer maxValue){
         return buildingConfiguration.findAll { b ->
-            b.product == product && b.race && buildingProductions.find { p -> p.race == b.race && p.value >= maxValue }
-        }.sort { -it.value } 
+            b.product == product && b.race && buildingProductions.find { p -> p.race == b.race && p.value <= maxValue }
+        }.sort { it.value } 
     }
 
     /** Resolve the actual race specific buildings */
