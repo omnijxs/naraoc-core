@@ -54,8 +54,8 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         buildingProductions = []
 
         a = new Building(race: orc, product: Product.TRADE, build: 10)
-        b = new Building(race: orc, product: Product.TRADE, ancestor: a, build: 30)
-        c = new Building(race: orc, product: Product.TRADE, ancestor: b, build: 20)
+        b = new Building(race: orc, product: Product.TRADE, ancestor: a, build: 20)
+        c = new Building(race: orc, product: Product.TRADE, ancestor: b, build: 30)
 
         buildingConfiguration = [a, b, c]
     }
@@ -190,24 +190,26 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         valueC == 10 + 30 + 20
 
     }
-
-    @Unroll
+    
     def "Test for resolvePossibleUniqueBuildings-method."(){
         setup:
-        // TODO CANNOT DO DDT!!! 
         buildingProductions.add(new BuildingProduction(race: orc, product: Product.TRADE, value: 60))       
 
         when:
-        def buildings = resolvePossibleUniqueBuildings(product, maxValue)
+        def buildings = resolvePossibleUniqueBuildings(Product.FOOD, 60)
 
         then:
-        buildings == expected
+        buildings == []
+    }
 
-        where:
-        product        | maxValue | expected
-        Product.FOOD   | 0        | []
-        Product.FOOD   | 60       | []
-        Product.TRADE  | 60       | [c, b, a]
+    def "Test for resolvePossibleUniqueBuildings-method."(){
+        setup:
+        buildingProductions.add(new BuildingProduction(race: orc, product: Product.TRADE, value: 60))       
 
+        when:
+        def buildings = resolvePossibleUniqueBuildings(Product.TRADE, 60)
+
+        then:
+        buildings == [a, b, c]
     }
 }
