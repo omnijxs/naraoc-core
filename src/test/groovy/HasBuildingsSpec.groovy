@@ -212,4 +212,18 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         then:
         buildings == [a, b, c]
     }
+
+    def "Test for resolveBuiltUniqueBuildings-method. "(){
+        setup:
+        Integer maxValue = 0
+        List<Building> possibleUniqueBuildings = []
+
+        buildingProductions.add(new BuildingProduction(race: orc, product: Product.TRADE, value: 60))
+
+        when:
+        def buildings = resolveBuiltUniqueBuildings(Product.TRADE, maxValue, possibleUniqueBuildings)
+
+        then:
+        !buildings
+    }
 }
