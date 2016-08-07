@@ -46,5 +46,14 @@ class BuildingSpec extends Specification {
         valueE == 10 + 20 + 30 + 40 + 50
     }
 
-    // TODO tests for resolveBuilt!!!
+    def "Test for resolveBuilt-method. Building a."(){
+        setup:
+
+        when:
+        def built = a.resolveBuilt(10, 10)
+
+        then:
+        built
+    }
+    
 }
