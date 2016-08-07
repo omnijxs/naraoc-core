@@ -172,24 +172,6 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         then:
         value == 4
     }
-
-    def "Test for getTotalValue-method."(){
-        setup:
-        Building a = new Building(build: 10)
-        Building b = new Building(ancestor: a, build: 30)
-        Building c = new Building(ancestor: b, build: 20)
-
-        when:
-        Integer valueA = a.getTotalValue()
-        Integer valueB = b.getTotalValue()
-        Integer valueC = c.getTotalValue()
-
-        then:
-        valueA == 10
-        valueB == 10 + 30
-        valueC == 10 + 30 + 20
-
-    }
     
     def "Test for resolvePossibleUniqueBuildings-method. No unique buildings. "(){
         setup:
@@ -215,8 +197,8 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
 
     def "Test for resolveBuiltUniqueBuildings-method. "(){
         setup:
-        Integer maxValue = 0
-        List<Building> possibleUniqueBuildings = []
+        Integer maxValue = 60
+        List<Building> possibleUniqueBuildings = [c]
 
         buildingProductions.add(new BuildingProduction(race: orc, product: Product.TRADE, value: 60))
 
@@ -224,6 +206,34 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         def buildings = resolveBuiltUniqueBuildings(Product.TRADE, maxValue, possibleUniqueBuildings)
 
         then:
-        !buildings
+        buildings == new Tuple(30, [c])
+    }
+
+    def "Test for resolveBuiltUniqueBuildings-method. Not enough production. "(){
+        setup:
+        Integer maxValue = 30
+        List<Building> possibleUniqueBuildings = [c]
+
+        buildingProductions.add(new BuildingProduction(race: orc, product: Product.TRADE, value: 30))
+
+        when:
+        def buildings = resolveBuiltUniqueBuildings(Product.TRADE, maxValue, possibleUniqueBuildings)
+
+        then:
+        buildings == new Tuple(30, [])
+    }
+
+    def "Test for resolveBuiltUniqueBuildings-method. Not enough race-specific production. "(){
+        setup:
+        Integer maxValue = 60
+        List<Building> possibleUniqueBuildings = [c]
+
+        buildingProductions.add(new BuildingProduction(race: orc, product: Product.TRADE, value: 30))
+
+        when:
+        def buildings = resolveBuiltUniqueBuildings(Product.TRADE, maxValue, possibleUniqueBuildings)
+
+        then:
+        buildings == new Tuple(60, [])
     }
 }

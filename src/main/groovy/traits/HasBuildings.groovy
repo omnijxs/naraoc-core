@@ -103,9 +103,6 @@ trait HasBuildings {
             if(building.resolveBuilt(maxValue, buildValue)){
                 resolvedUniqueBuildings.add(building)
                 maxValue -= building.value
-            /** If not, then just subtract the buildValue from common building tree */
-            } else {
-                maxValue -= buildValue
             }
         }
 
