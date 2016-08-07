@@ -191,7 +191,7 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
 
     }
     
-    def "Test for resolvePossibleUniqueBuildings-method."(){
+    def "Test for resolvePossibleUniqueBuildings-method. No unique buildings. "(){
         setup:
         buildingProductions.add(new BuildingProduction(race: orc, product: Product.TRADE, value: 60))       
 
@@ -202,7 +202,7 @@ class HasBuildingsSpec extends Specification implements HasBuildings {
         buildings == []
     }
 
-    def "Test for resolvePossibleUniqueBuildings-method."(){
+    def "Test for resolvePossibleUniqueBuildings-method. Unique buildings. "(){
         setup:
         buildingProductions.add(new BuildingProduction(race: orc, product: Product.TRADE, value: 60))       
 
